@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ブログ管理画面 | ラーメン鳳凰</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --black: #0a0a0a; --dark: #141414; --dark2: #1e1e1e; --dark3: #252525;
+      --red: #c0392b; --red-light: #e74c3c; --white: #f5f0eb; --gray: #888; --gray2: #444;
+      --green: #27ae60; --green-light: #2ecc71; --blue: #2980b9;
+    }
+    body { font-family: 'Hiragino Kaku Gothic Pro','Yu Gothic','Meiryo',sans-serif; background: var(--black); color: var(--white); min-height: 100vh; }
+
+    /* ===== ログイン画面 ===== */
+    .login-screen {
+      position: fixed; inset: 0;
+      background: var(--black);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+    }
+    .login-box {
+      background: var(--dark2); border: 1px solid #333;
+      padding: 48px 40px; width: 360px; text-align: center;
+    }
+    .login-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 28px; }
+    .login-logo img { height: 32px; }
+    .login-logo span { font-size: 0.95rem; font-weight: 900; letter-spacing: 0.15em; }
+    .login-title { font-size: 0.7rem; letter-spacing: 0.25em; color: var(--red-light); margin-bottom: 28px; }
+    .login-field { margin-bottom: 14px; text-align: left; }
+    .login-field label { font-size: 0.72rem; color: var(--gray); letter-spacing: 0.1em; display: block; margin-bottom: 6px; }
+    .login-field input { width: 100%; background: #111; border: 1px solid #333; color: var(--white); padding: 10px 14px; font-size: 0.88rem; font-family: inherit; outline: none; transition: border-color 0.2s; }
+    .login-field input:focus { border-color: var(--red-light); }
+    .login-btn { width: 100%; margin-top: 20px; background: var(--red); color: #fff; border: none; padding: 13px; font-size: 0.88rem; letter-spacing: 0.15em; cursor: pointer; font-family: inherit; transition: background 0.2s; }
+    .login-btn:hover { background: var(--red-light); }
+    .login-error { margin-top: 12px; font-size: 0.78rem; color: var(--red-light); display: none; }
+
+    /* ===== ヘッダー ===== */
+    .admin-header {
+      background: var(--dark); border-bottom: 1px solid var(--red);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px; height: 60px; position: sticky; top: 0; z-index: 100;
+    }
+    .admin-logo { display: flex; align-items: center; gap: 10px; }
+    .admin-logo img { height: 28px; }
+    .admin-logo-text { font-size: 0.85rem; font-weight: 900; letter-spacing: 0.1em; }
+    .admin-logo-badge { font-size: 0.6rem; background: var(--red); color: #fff; padding: 2px 8px; letter-spacing: 0.1em; margin-left: 8px; }
+    .header-actions { display: flex; align-items: center; gap: 16px; }
+    .header-link { color: var(--gray); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.08em; transition: color 0.2s; }
+    .header-link:hover { color: var(--red-light); }
+    .logout-btn { background: none; border: 1px solid #444; color: var(--gray); padding: 6px 16px; font-size: 0.72rem; letter-spacing: 0.1em; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .logout-btn:hover { border-color: var(--red); color: var(--red-light); }
+
+    /* ===== レイアウト ===== */
+    .admin-body { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 60px); }
+
+    /* ===== サイドバー ===== */
+    .admin-side {
+      background: var(--dark); border-right: 1px solid #222;
+      padding: 24px 0;
+    }
+    .side-section-label { font-size: 0.6rem; letter-spacing: 0.2em; color: var(--gray2); padding: 0 20px; margin-bottom: 8px; margin-top: 20px; }
+    .side-section-label:first-child { margin-top: 0; }
+    .side-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 20px; font-size: 0.82rem; letter-spacing: 0.06em;
+      color: var(--gray); cursor: pointer; transition: background 0.15s, color 0.15s;
+      border-left: 2px solid transparent;
+    }
+    .side-nav-item:hover { background: var(--dark2); color: var(--white); }
+    .side-nav-item.active { background: var(--dark2); color: var(--red-light); border-left-color: var(--red); }
+    .side-nav-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ===== メインコンテンツ ===== */
+    .admin-main { padding: 36px 40px; }
+
+    .page-heading { margin-bottom: 28px; }
+    .page-heading h1 { font-size: 1.4rem; font-weight: 900; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .page-heading p { font-size: 0.8rem; color: var(--gray); }
+
+    /* ===== 統計カード ===== */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 36px; }
+    .stat-card { background: var(--dark2); border: 1px solid #222; padding: 20px 24px; }
+    .stat-card-label { font-size: 0.65rem; color: var(--gray); letter-spacing: 0.15em; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .stat-card-label svg { width: 13px; height: 13px; color: var(--red-light); }
+    .stat-card-num { font-size: 1.8rem; font-weight: 900; color: var(--red-light); }
+    .stat-card-sub { font-size: 0.68rem; color: var(--gray2); margin-top: 4px; }
+
+    /* ===== ボタン ===== */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; font-size: 0.82rem; letter-spacing: 0.1em; border: none; cursor: pointer; font-family: inherit; transition: all 0.2s; text-decoration: none; }
+    .btn-primary { background: var(--red); color: #fff; }
+    .btn-primary:hover { background: var(--red-light); }
+    .btn-outline { background: none; border: 1px solid #444; color: var(--gray); }
+    .btn-outline:hover { border-color: var(--red); color: var(--red-light); }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-green:hover { background: var(--green-light); }
+    .btn-danger { background: none; border: 1px solid #444; color: var(--gray); font-size: 0.75rem; padding: 6px 14px; }
+    .btn-danger:hover { background: var(--red); border-color: var(--red); color: #fff; }
+    .btn-sm { padding: 6px 14px; font-size: 0.75rem; }
+
+    /* ===== 記事一覧テーブル ===== */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .section-header h2 { font-size: 1rem; font-weight: 900; letter-spacing: 0.05em; }
+
+    .article-table { width: 100%; border-collapse: collapse; background: var(--dark2); border: 1px solid #222; }
+    .article-table th { text-align: left; padding: 12px 16px; font-size: 0.68rem; color: var(--gray); letter-spacing: 0.12em; border-bottom: 1px solid #2a2a2a; background: var(--dark3); white-space: nowrap; }
+    .article-table td { padding: 14px 16px; font-size: 0.82rem; border-bottom: 1px solid #1e1e1e; vertical-align: middle; }
+    .article-table tr:last-child td { border-bottom: none; }
+    .article-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .table-img { width: 56px; height: 40px; object-fit: cover; display: block; }
+    .table-title { font-weight: bold; line-height: 1.4; max-width: 280px; }
+    .table-title-sub { font-size: 0.7rem; color: var(--gray); margin-top: 2px; }
+    .tag-badge { display: inline-block; font-size: 0.62rem; padding: 2px 10px; border: 1px solid var(--red); color: var(--red-light); white-space: nowrap; }
+    .table-actions { display: flex; gap: 6px; }
+    .empty-row td { text-align: center; padding: 48px; color: var(--gray); }
+
+    /* ===== 記事フォーム ===== */
+    .form-card { background: var(--dark2); border: 1px solid #222; padding: 32px 36px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 7px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { font-size: 0.72rem; color: var(--gray); letter-spacing: 0.1em; }
+    .form-group label span { color: var(--red-light); margin-left: 2px; }
+    .form-control {
+      background: #111; border: 1px solid #333; color: var(--white);
+      padding: 10px 14px; font-size: 0.88rem; font-family: inherit;
+      outline: none; transition: border-color 0.2s; width: 100%;
+    }
+    .form-control:focus { border-color: var(--red-light); }
+    textarea.form-control { resize: vertical; min-height: 120px; }
+    select.form-control option { background: #1e1e1e; }
+
+    .img-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 8px; }
+    .img-option {
+      position: relative; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s;
+    }
+    .img-option input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .img-option img { width: 100%; height: 60px; object-fit: cover; display: block; }
+    .img-option .img-label { font-size: 0.55rem; color: var(--gray); text-align: center; padding: 3px 2px; background: var(--dark3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .img-option.selected, .img-option:has(input:checked) { border-color: var(--red-light); }
+    .img-option.selected .img-label { color: var(--red-light); }
+
+    .content-help { font-size: 0.7rem; color: var(--gray2); margin-top: 6px; line-height: 1.6; }
+    .content-help code { background: #111; padding: 1px 5px; font-size: 0.68rem; color: var(--red-light); }
+
+    .form-actions { display: flex; gap: 12px; margin-top: 28px; align-items: center; }
+
+    /* ===== プレビュー ===== */
+    .preview-box {
+      background: var(--dark); border: 1px solid #2a2a2a;
+      padding: 24px 28px; margin-top: 24px;
+    }
+    .preview-box-label { font-size: 0.65rem; letter-spacing: 0.2em; color: var(--red-light); margin-bottom: 16px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+    .preview-content { font-size: 0.85rem; color: #ccc; line-height: 1.9; }
+    .preview-content p { margin-bottom: 1em; }
+    .preview-content h3 { font-size: 1rem; font-weight: 900; color: var(--white); margin: 1.5em 0 0.6em; padding-left: 10px; border-left: 3px solid var(--red); }
+    .preview-content .highlight-box { background: var(--dark2); border-left: 3px solid var(--red); padding: 12px 16px; margin: 1em 0; font-size: 0.82rem; color: var(--gray); }
+
+    /* ===== トースト通知 ===== */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+      background: var(--green); color: #fff;
+      padding: 14px 24px; font-size: 0.85rem; letter-spacing: 0.05em;
+      display: none; align-items: center; gap: 10px;
+      animation: slideIn 0.3s ease;
+    }
+    .toast.error { background: var(--red); }
+    .toast.show { display: flex; }
+    @keyframes slideIn { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform:none; } }
+
+    /* ===== 削除確認モーダル ===== */
+    .confirm-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 800;
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .confirm-overlay.show { display: flex; }
+    .confirm-box { background: var(--dark2); border: 1px solid #444; padding: 36px 40px; max-width: 400px; width: 100%; text-align: center; }
+    .confirm-box h3 { font-size: 1.1rem; margin-bottom: 12px; }
+    .confirm-box p { font-size: 0.85rem; color: var(--gray); margin-bottom: 28px; line-height: 1.7; }
+    .confirm-actions { display: flex; gap: 12px; justify-content: center; }
+
+    /* ページ切り替え */
+    .page { display: none; }
+    .page.active { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- ===== ログイン画面 ===== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <img src="logo-horizontal.png" alt="">
+      <span>ラーメン鳳凰</span>
+    </div>
+    <p class="login-title">BLOG ADMIN — 管理画面ログイン</p>
+    <div class="login-field">
+      <label>パスワード</label>
+      <input type="password" id="loginPassword" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">ログイン</button>
+    <p class="login-error" id="loginError">パスワードが違います。</p>
+    <p style="margin-top:16px; font-size:0.68rem; color:var(--gray);">初期パスワード: houou2026</p>
+  </div>
+</div>
+
+<!-- ===== 管理画面本体 ===== -->
+<div id="adminApp" style="display:none;">
+
+  <header class="admin-header">
+    <div class="admin-logo">
+      <img src="logo-horizontal.png" alt="">
+      <span class="admin-logo-text">ラーメン鳳凰</span>
+      <span class="admin-logo-badge">ADMIN</span>
+    </div>
+    <div class="header-actions">
+      <a class="header-link" href="blog.html" target="_blank">ブログを見る ↗</a>
+      <a class="header-link" href="index.html" target="_blank">サイトを見る ↗</a>
+      <button class="logout-btn" onclick="doLogout()">ログアウト</button>
+    </div>
+  </header>
+
+  <div class="admin-body">
+
+    <!-- サイドバー -->
+    <nav class="admin-side">
+      <p class="side-section-label">メニュー</p>
+      <div class="side-nav-item active" onclick="showPage('dashboard')" id="nav-dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        ダッシュボード
+      </div>
+      <div class="side-nav-item" onclick="showPage('list')" id="nav-list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        記事一覧
+      </div>
+      <div class="side-nav-item" onclick="showPage('new')" id="nav-new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        新しい記事を書く
+      </div>
+      <p class="side-section-label">公開</p>
+      <div class="side-nav-item" onclick="exportPosts()" style="color:#27ae60; border-left:2px solid #27ae60;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        公開する（posts.js）
+      </div>
+      <p class="side-section-label">その他</p>
+      <div class="side-nav-item" onclick="resetData()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+        データをリセット
+      </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="admin-main">
+
+      <!-- ダッシュボード -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-heading">
+          <h1>ダッシュボード</h1>
+          <p>ブログの状況を確認できます。</p>
+        </div>
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="section-header">
+          <h2>最近の記事</h2>
+          <button class="btn btn-primary btn-sm" onclick="showPage('new')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            新規作成
+          </button>
+        </div>
+        <table class="article-table" id="recentTable">
+          <thead><tr><th></th><th>タイトル</th><th>カテゴリ</th><th>投稿日</th><th>閲覧数</th><th></th></tr></thead>
+          <tbody id="recentTbody"></tbody>
+        </table>
+      </div>
+
+      <!-- 記事一覧 -->
+      <div class="page" id="page-list">
+        <div class="page-heading">
+          <h1>記事一覧</h1>
+          <p>すべての記事を管理できます。</p>
+        </div>
+        <div class="section-header">
+          <h2 id="listCount"></h2>
+          <button class="btn btn-primary btn-sm" onclick="showPage('new')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            新規作成
+          </button>
+        </div>
+        <table class="article-table">
+          <thead><tr><th></th><th>タイトル</th><th>カテゴリ</th><th>投稿日</th><th>閲覧数</th><th>操作</th></tr></thead>
+          <tbody id="listTbody"></tbody>
+        </table>
+      </div>
+
+      <!-- 新規 / 編集フォーム -->
+      <div class="page" id="page-new">
+        <div class="page-heading">
+          <h1 id="formTitle">新しい記事を書く</h1>
+          <p id="formSubtitle">記事の内容を入力して「保存する」を押してください。</p>
+        </div>
+        <div class="form-card">
+          <input type="hidden" id="editId">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>記事タイトル <span>*</span></label>
+              <input type="text" class="form-control" id="fTitle" placeholder="例：今日のまかないが最高でした">
+            </div>
+            <div class="form-group">
+              <label>カテゴリ <span>*</span></label>
+              <select class="form-control" id="fTag">
+                <option value="">選択してください</option>
+                <option>仕込み</option>
+                <option>麺</option>
+                <option>トッピング</option>
+                <option>食材</option>
+                <option>お知らせ</option>
+                <option>日常</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>投稿日 <span>*</span></label>
+              <input type="date" class="form-control" id="fDate">
+            </div>
+            <div class="form-group full">
+              <label>サムネイル画像を選ぶ</label>
+              <div class="img-picker" id="imgPicker"></div>
+              <div style="margin-top:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <span style="font-size:0.72rem; color:var(--gray); white-space:nowrap;">または ファイル名を直接入力：</span>
+                <input type="text" id="customImgPath" class="form-control" style="max-width:280px; padding:6px 12px; font-size:0.8rem;" placeholder="例: my-photo.jpg　または　ra/my-photo.jpg" oninput="applyCustomImg()">
+                <span id="customImgPreviewWrap" style="display:none;">
+                  <img id="customImgPreview" src="" style="height:48px; object-fit:cover; border:2px solid var(--red-light);" alt="プレビュー">
+                </span>
+              </div>
+              <p style="font-size:0.68rem; color:var(--gray2); margin-top:6px; line-height:1.7;">
+                &#x2605; 新しい写真を使う場合は、まず写真ファイルを <code style="background:#111;padding:1px 5px;color:var(--red-light);">ra1</code> フォルダにコピーしてから、ここにファイル名を入力してください。
+              </p>
+            </div>
+            <div class="form-group full">
+              <label>記事の要約（一覧に表示される説明文） <span>*</span></label>
+              <textarea class="form-control" id="fExcerpt" rows="3" placeholder="記事の内容を2〜3文で要約してください。"></textarea>
+            </div>
+            <div class="form-group full">
+              <label>本文 <span>*</span></label>
+              <textarea class="form-control" id="fContent" rows="16" placeholder="本文を入力してください。&#10;&#10;【使える書式】&#10;通常の文章はそのまま入力するとOKです。&#10;&#10;見出しを入れる場合は先頭に「##」を付けてください。&#10;例：## スープの秘密&#10;&#10;ボックス（囲み文章）は先頭に「>>」を付けてください。&#10;例：>> 豚骨と鶏ガラの比率は6：4です。" oninput="updatePreview()"></textarea>
+              <p class="content-help">
+                見出し: <code>## 見出しテキスト</code> &nbsp;|&nbsp;
+                囲みボックス: <code>>> テキスト</code> &nbsp;|&nbsp;
+                それ以外はそのまま段落になります
+              </p>
+            </div>
+            <div class="form-group full">
+              <label>タグ（カンマ区切りで入力）</label>
+              <input type="text" class="form-control" id="fTags" placeholder="例：スープ, 仕込み, 豚骨">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="savePost()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              保存する
+            </button>
+            <button class="btn btn-outline" onclick="showPage('list')">キャンセル</button>
+          </div>
+        </div>
+
+        <!-- プレビュー -->
+        <div class="preview-box">
+          <p class="preview-box-label">PREVIEW — プレビュー</p>
+          <div class="preview-content" id="previewContent">本文を入力するとここにプレビューが表示されます。</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- 削除確認モーダル -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>記事を削除しますか？</h3>
+    <p id="confirmText">この操作は元に戻せません。</p>
+    <div class="confirm-actions">
+      <button class="btn btn-danger" onclick="confirmDelete()">削除する</button>
+      <button class="btn btn-outline" onclick="closeConfirm()">キャンセル</button>
+    </div>
+  </div>
+</div>
+
+<!-- トースト通知 -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 設定 =====
+const ADMIN_PASSWORD = 'houou2026';
+const STORAGE_KEY = 'houou_blog_posts';
+const CATEGORIES = ['仕込み', '麺', 'トッピング', '食材', 'お知らせ', '日常'];
+const IMAGES = [
+  { src: 'ra/broth.jpg',       label: 'スープ' },
+  { src: 'ra/noodles.jpg',     label: '麺' },
+  { src: 'ra/chashu.jpg',      label: 'チャーシュー' },
+  { src: 'ra/shop1.webp',      label: '店内' },
+  { src: 'ra/hero.jpg',        label: 'ヒーロー' },
+  { src: 'ramen-rich.jpg',     label: '醤油ラーメン' },
+  { src: 'ramen-spicy.jpg',    label: '辛ラーメン' },
+  { src: 'ramen-salt.jpg',     label: '塩ラーメン' },
+  { src: 'gyoza.jpg',          label: '餃子' },
+  { src: 'karaage.jpg',        label: '唐揚げ' },
+  { src: 'fried-rice.jpg',     label: 'チャーハン' },
+  { src: 'tamago-kake-gohan.jpg', label: 'TKG' },
+  { src: 'beer.jpg',           label: 'ビール' },
+  { src: 'store-hero.png',     label: '店舗外観' },
+];
+
+// ===== ログイン =====
+function doLogin() {
+  const pw = document.getElementById('loginPassword').value;
+  if (pw === ADMIN_PASSWORD) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    renderAll();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+function doLogout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminApp').style.display = 'none';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+// ===== データ =====
+function getPosts() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { return []; }
+}
+function savePosts(posts) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+}
+function nextId() {
+  const posts = getPosts();
+  return posts.length ? Math.max(...posts.map(p => p.id || 0)) + 1 : 1;
+}
+
+// ===== ページ切り替え =====
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.side-nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const nav = document.getElementById('nav-' + name);
+  if (nav) nav.classList.add('active');
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'list') renderList();
+  if (name === 'new') { resetForm(); buildImgPicker(null); }
+}
+
+// ===== ダッシュボード =====
+function renderDashboard() {
+  const posts = getPosts();
+  const totalViews = posts.reduce((s, p) => s + (p.views || 0), 0);
+  const cats = [...new Set(posts.map(p => p.tag))].length;
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-card-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>総記事数</div>
+      <div class="stat-card-num">${posts.length}</div>
+      <div class="stat-card-sub">件の記事</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>総閲覧数</div>
+      <div class="stat-card-num">${totalViews.toLocaleString()}</div>
+      <div class="stat-card-sub">views</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/></svg>カテゴリ数</div>
+      <div class="stat-card-num">${cats}</div>
+      <div class="stat-card-sub">カテゴリ</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>最新記事</div>
+      <div class="stat-card-num" style="font-size:1rem; margin-top:4px;">${posts[0] ? posts[0].date : 'ー'}</div>
+      <div class="stat-card-sub">${posts[0] ? posts[0].title.slice(0,14) + '…' : '記事なし'}</div>
+    </div>`;
+  renderTable('recentTbody', posts.slice(0, 5), false);
+}
+
+// ===== 記事一覧 =====
+function renderList() {
+  const posts = getPosts();
+  document.getElementById('listCount').textContent = `全 ${posts.length} 件`;
+  renderTable('listTbody', posts, true);
+}
+
+function renderTable(tbodyId, posts, showAll) {
+  const tbody = document.getElementById(tbodyId);
+  if (!posts.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">記事がありません。「新しい記事を書く」から作成してください。</td></tr>';
+    return;
+  }
+  tbody.innerHTML = posts.map(p => `
+    <tr>
+      <td><img class="table-img" src="${p.img}" onerror="this.src='ramen-rich.jpg'" alt=""></td>
+      <td>
+        <div class="table-title">${p.title}</div>
+        <div class="table-title-sub">${p.excerpt ? p.excerpt.slice(0, 40) + '…' : ''}</div>
+      </td>
+      <td><span class="tag-badge">${p.tag}</span></td>
+      <td style="color:var(--gray); font-size:0.78rem;">${p.date}</td>
+      <td style="color:var(--gray); font-size:0.78rem;">${(p.views||0).toLocaleString()}</td>
+      <td>
+        <div class="table-actions">
+          <button class="btn btn-outline btn-sm" onclick="editPost(${p.id})">編集</button>
+          ${showAll ? `<button class="btn btn-danger" onclick="askDelete(${p.id}, '${p.title.replace(/'/g,'&#39;')}')">削除</button>` : ''}
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+// ===== 画像ピッカー =====
+function buildImgPicker(selected) {
+  document.getElementById('imgPicker').innerHTML = IMAGES.map(img => `
+    <label class="img-option${selected === img.src ? ' selected' : ''}" onclick="selectImg(this, '${img.src}')">
+      <input type="radio" name="imgChoice" value="${img.src}" ${selected === img.src ? 'checked' : ''}>
+      <img src="${img.src}" alt="${img.label}" onerror="this.style.display='none'">
+      <div class="img-label">${img.label}</div>
+    </label>`).join('');
+}
+
+function selectImg(el, src) {
+  document.querySelectorAll('.img-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  // カスタム入力欄をクリア
+  const ci = document.getElementById('customImgPath');
+  if (ci) { ci.value = ''; document.getElementById('customImgPreviewWrap').style.display = 'none'; }
+}
+
+function applyCustomImg() {
+  const val = document.getElementById('customImgPath').value.trim();
+  // ピッカーの選択を解除
+  document.querySelectorAll('.img-option').forEach(o => o.classList.remove('selected'));
+  const wrap = document.getElementById('customImgPreviewWrap');
+  const preview = document.getElementById('customImgPreview');
+  if (val) {
+    preview.src = val;
+    preview.onerror = () => { wrap.style.display = 'none'; };
+    preview.onload  = () => { wrap.style.display = 'inline-block'; };
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+
+function getSelectedImg() {
+  // カスタム入力が優先
+  const custom = document.getElementById('customImgPath');
+  if (custom && custom.value.trim()) return custom.value.trim();
+  const checked = document.querySelector('.img-option.selected input');
+  return checked ? checked.value : IMAGES[0].src;
+}
+
+// ===== フォームリセット =====
+function resetForm() {
+  document.getElementById('editId').value = '';
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fTag').value = '';
+  document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('fExcerpt').value = '';
+  document.getElementById('fContent').value = '';
+  document.getElementById('fTags').value = '';
+  document.getElementById('formTitle').textContent = '新しい記事を書く';
+  document.getElementById('formSubtitle').textContent = '記事の内容を入力して「保存する」を押してください。';
+  document.getElementById('previewContent').innerHTML = '本文を入力するとここにプレビューが表示されます。';
+  buildImgPicker(null);
+}
+
+// ===== 編集 =====
+function editPost(id) {
+  const posts = getPosts();
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  showPage('new');
+  document.getElementById('editId').value = id;
+  document.getElementById('fTitle').value = p.title;
+  document.getElementById('fTag').value = p.tag;
+  document.getElementById('fDate').value = p.date.replace(/\./g, '-');
+  document.getElementById('fExcerpt').value = p.excerpt;
+  document.getElementById('fTags').value = (p.tags || []).join(', ');
+  // HTMLを簡易テキストに戻す
+  document.getElementById('fContent').value = htmlToText(p.content || '');
+  document.getElementById('formTitle').textContent = '記事を編集';
+  document.getElementById('formSubtitle').textContent = '内容を編集して「保存する」を押してください。';
+  buildImgPicker(p.img);
+  updatePreview();
+}
+
+// ===== 保存 =====
+function savePost() {
+  const title = document.getElementById('fTitle').value.trim();
+  const tag = document.getElementById('fTag').value;
+  const dateRaw = document.getElementById('fDate').value;
+  const excerpt = document.getElementById('fExcerpt').value.trim();
+  const contentRaw = document.getElementById('fContent').value.trim();
+  const tagsRaw = document.getElementById('fTags').value;
+
+  if (!title) { showToast('タイトルを入力してください。', true); return; }
+  if (!tag) { showToast('カテゴリを選択してください。', true); return; }
+  if (!excerpt) { showToast('要約を入力してください。', true); return; }
+  if (!contentRaw) { showToast('本文を入力してください。', true); return; }
+
+  const date = dateRaw.replace(/-/g, '.');
+  const img = getSelectedImg();
+  const content = textToHtml(contentRaw);
+  const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+  const posts = getPosts();
+  const editId = parseInt(document.getElementById('editId').value);
+
+  if (editId) {
+    const idx = posts.findIndex(p => p.id === editId);
+    if (idx !== -1) {
+      posts[idx] = { ...posts[idx], title, tag, date, img, excerpt, content, tags };
+      savePosts(posts);
+      showToast('記事を更新しました！');
+    }
+  } else {
+    const newPost = { id: nextId(), title, tag, date, img, excerpt, content, tags, views: 0 };
+    posts.unshift(newPost);
+    savePosts(posts);
+    showToast('記事を保存しました！');
+  }
+  showPage('list');
+}
+
+// ===== 削除 =====
+let deleteTargetId = null;
+function askDelete(id, title) {
+  deleteTargetId = id;
+  document.getElementById('confirmText').textContent = `「${title}」を削除します。この操作は元に戻せません。`;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('show');
+  deleteTargetId = null;
+}
+function confirmDelete() {
+  if (!deleteTargetId) return;
+  const posts = getPosts().filter(p => p.id !== deleteTargetId);
+  savePosts(posts);
+  closeConfirm();
+  showToast('記事を削除しました。');
+  renderList();
+}
+
+// ===== 公開（posts.js エクスポート） =====
+function exportPosts() {
+  const posts = getPosts();
+  if (!posts.length) { showToast('記事がありません。', true); return; }
+
+  const json = JSON.stringify(posts, null, 2);
+  const content =
+    '// ラーメン鳳凰 ブログ記事データ\n' +
+    '// ※このファイルは管理画面の「公開する」ボタンで自動生成されます。手動で編集しないでください。\n' +
+    'window.BLOG_POSTS = ' + json + ';\n';
+
+  // ダウンロード
+  const blob = new Blob([content], { type: 'text/javascript' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'posts.js';
+  a.click();
+  URL.revokeObjectURL(a.href);
+
+  // 手順モーダルを表示
+  showExportGuide();
+}
+
+function showExportGuide() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:900;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+  overlay.innerHTML = `
+    <div style="background:#1e1e1e;border:1px solid #27ae60;padding:40px 44px;max-width:480px;width:100%;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:16px;">&#x2705;</div>
+      <h3 style="font-size:1.15rem;font-weight:900;letter-spacing:0.05em;margin-bottom:12px;">posts.js をダウンロードしました！</h3>
+      <p style="font-size:0.82rem;color:#888;line-height:1.9;margin-bottom:28px;">
+        次の手順でブログを更新してください。
+      </p>
+      <div style="background:#111;border:1px solid #333;padding:20px 24px;text-align:left;margin-bottom:28px;">
+        <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;">
+          <span style="background:#c0392b;color:#fff;font-size:0.7rem;padding:2px 8px;white-space:nowrap;margin-top:2px;">STEP 1</span>
+          <span style="font-size:0.85rem;line-height:1.7;">ダウンロードされた <code style="background:#222;padding:1px 6px;color:#e74c3c;">posts.js</code> を<br><strong>ra1 フォルダに上書きコピー</strong>する</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;">
+          <span style="background:#c0392b;color:#fff;font-size:0.7rem;padding:2px 8px;white-space:nowrap;margin-top:2px;">STEP 2</span>
+          <span style="font-size:0.85rem;line-height:1.7;">Netlify など<strong>サーバーにフォルダをアップロード</strong>する<br><span style="color:#888;font-size:0.75rem;">（初回のみ。2回目以降は posts.js だけで OK）</span></span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <span style="background:#27ae60;color:#fff;font-size:0.7rem;padding:2px 8px;white-space:nowrap;margin-top:2px;">完了</span>
+          <span style="font-size:0.85rem;line-height:1.7;">ブログページを開くと<strong>記事が反映</strong>されています</span>
+        </div>
+      </div>
+      <button onclick="this.closest('div[style]').remove()" style="background:#27ae60;color:#fff;border:none;padding:12px 36px;font-size:0.88rem;letter-spacing:0.1em;cursor:pointer;font-family:inherit;">閉じる</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+// ===== リセット =====
+function resetData() {
+  if (!confirm('すべての記事をサンプルデータに戻しますか？\n現在の記事はすべて消えます。')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  showToast('データをリセットしました。');
+  renderAll();
+}
+
+// ===== テキスト <-> HTML 変換 =====
+function textToHtml(text) {
+  return text.split('\n').map(line => {
+    if (line.startsWith('## ')) return `<h3>${esc(line.slice(3))}</h3>`;
+    if (line.startsWith('>> ')) return `<div class="highlight-box">${esc(line.slice(3))}</div>`;
+    if (line.trim() === '') return '';
+    return `<p>${esc(line)}</p>`;
+  }).filter((l, i, arr) => l !== '' || arr[i-1] !== '').join('');
+}
+
+function htmlToText(html) {
+  return html
+    .replace(/<h3>(.*?)<\/h3>/g, '## $1')
+    .replace(/<div class="highlight-box">(.*?)<\/div>/g, '>> $1')
+    .replace(/<p>(.*?)<\/p>/g, '$1\n')
+    .replace(/<[^>]+>/g, '')
+    .trim();
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ===== プレビュー =====
+function updatePreview() {
+  const raw = document.getElementById('fContent').value.trim();
+  if (!raw) {
+    document.getElementById('previewContent').innerHTML = '本文を入力するとここにプレビューが表示されます。';
+    return;
+  }
+  document.getElementById('previewContent').innerHTML = textToHtml(raw);
+}
+
+// ===== トースト =====
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ===== 全体再描画 =====
+function renderAll() {
+  renderDashboard();
+}
+
+// ===== 初期化 =====
+document.getElementById('fDate').value = new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>

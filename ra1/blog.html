@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>店長ブログ | ラーメン鳳凰</title>
+  <script src="posts.js"></script>
+
+  <!-- SEO基本設定 -->
+  <meta name="description" content="ラーメン鳳凰・店長ブログ。スープの仕込みや自家製麺へのこだわり、日々の出来事など、ラーメン作りの裏側をお届けします。">
+  <meta name="keywords" content="ラーメン鳳凰,店長ブログ,ラーメン,仕込み,自家製麺,豚骨醤油,渋谷,原宿">
+  <meta name="robots" content="index, follow">
+
+  <!-- OGP -->
+  <meta property="og:type" content="blog">
+  <meta property="og:site_name" content="ラーメン鳳凰">
+  <meta property="og:title" content="店長ブログ | ラーメン鳳凰">
+  <meta property="og:description" content="スープの仕込みや自家製麺へのこだわり、日々の出来事など、ラーメン作りの裏側をお届けします。">
+  <meta property="og:image" content="ra/broth.jpg">
+  <meta property="og:locale" content="ja_JP">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="店長ブログ | ラーメン鳳凰">
+  <meta name="twitter:description" content="スープの仕込みや自家製麺へのこだわり、ラーメン作りの裏側をお届けします。">
+  <meta name="twitter:image" content="ra/broth.jpg">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --black: #0a0a0a; --dark: #141414; --dark2: #1e1e1e; --dark3: #252525;
+      --red: #c0392b; --red-light: #e74c3c; --white: #f5f0eb; --gray: #888; --gray2: #555;
+    }
+    body { font-family: 'Hiragino Kaku Gothic Pro','Yu Gothic','Meiryo',sans-serif; background: var(--black); color: var(--white); line-height: 1.7; }
+
+    nav { position: sticky; top: 0; z-index: 200; background: rgba(10,10,10,0.96); backdrop-filter: blur(10px); border-bottom: 1px solid var(--red); display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 64px; }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo img { height: 36px; object-fit: contain; }
+    .nav-logo span { font-size: 1rem; font-weight: 900; letter-spacing: 0.15em; color: var(--white); }
+    .nav-right { display: flex; align-items: center; gap: 28px; }
+    .nav-links-sub { display: flex; gap: 24px; list-style: none; }
+    .nav-links-sub a { color: var(--gray); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.1em; transition: color 0.2s; }
+    .nav-links-sub a:hover, .nav-links-sub a.active { color: var(--red-light); }
+    .nav-back { color: var(--gray2); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.08em; display: flex; align-items: center; gap: 5px; border-left: 1px solid #333; padding-left: 24px; transition: color 0.2s; }
+    .nav-back:hover { color: var(--white); }
+    .lang-toggle { background: none; border: 1px solid #555; color: var(--gray); font-size: 0.72rem; letter-spacing: 0.15em; padding: 4px 12px; cursor: pointer; font-family: inherit; transition: border-color 0.2s, color 0.2s; margin-left: 16px; }
+    .lang-toggle:hover { border-color: var(--red-light); color: var(--red-light); }
+
+    .page-hero { position: relative; background: var(--dark); border-bottom: 1px solid #1a1a1a; padding: 56px 48px 0; overflow: hidden; }
+    .page-hero::before { content: 'BLOG'; position: absolute; right: 40px; top: 0; font-size: 10rem; font-weight: 900; color: rgba(255,255,255,0.02); letter-spacing: -0.05em; line-height: 1; pointer-events: none; }
+    .page-hero-inner { max-width: 1200px; margin: 0 auto; }
+    .page-hero-label { font-size: 0.65rem; letter-spacing: 0.4em; color: var(--red-light); margin-bottom: 10px; }
+    .page-hero-title { font-size: 2.6rem; font-weight: 900; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .page-hero-sub { font-size: 0.82rem; color: var(--gray); letter-spacing: 0.1em; margin-bottom: 40px; }
+
+    .category-tabs { display: flex; gap: 0; overflow-x: auto; }
+    .cat-tab { padding: 10px 24px; font-size: 0.78rem; letter-spacing: 0.1em; color: var(--gray); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.2s, border-color 0.2s; font-family: inherit; }
+    .cat-tab:hover { color: var(--white); }
+    .cat-tab.active { color: var(--red-light); border-bottom-color: var(--red-light); }
+
+    .main-wrap { max-width: 1200px; margin: 0 auto; padding: 52px 48px; display: grid; grid-template-columns: 1fr 320px; gap: 52px; align-items: start; }
+
+    .featured-card { position: relative; overflow: hidden; border: 1px solid #2a2a2a; margin-bottom: 40px; cursor: pointer; transition: border-color 0.25s; }
+    .featured-card:hover { border-color: var(--red); }
+    .featured-card img { width: 100%; height: 360px; object-fit: cover; display: block; transition: transform 0.5s; }
+    .featured-card:hover img { transform: scale(1.03); }
+    .featured-badge { position: absolute; top: 20px; left: 20px; background: var(--red); color: #fff; font-size: 0.62rem; letter-spacing: 0.2em; padding: 4px 12px; }
+    .featured-body { padding: 28px 32px; background: var(--dark2); }
+    .featured-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .post-date { font-size: 0.7rem; color: var(--gray); letter-spacing: 0.1em; }
+    .post-tag { font-size: 0.62rem; padding: 2px 10px; border: 1px solid var(--red); color: var(--red-light); letter-spacing: 0.1em; }
+    .featured-title { font-size: 1.35rem; font-weight: 900; line-height: 1.5; margin-bottom: 14px; letter-spacing: 0.03em; }
+    .featured-excerpt { font-size: 0.85rem; color: var(--gray); line-height: 1.9; margin-bottom: 20px; }
+    .read-more { font-size: 0.75rem; color: var(--red-light); letter-spacing: 0.12em; display: inline-flex; align-items: center; gap: 6px; }
+    .read-more svg { transition: transform 0.2s; }
+    .featured-card:hover .read-more svg { transform: translateX(4px); }
+
+    .article-list { display: flex; flex-direction: column; gap: 0; }
+    .article-card { display: grid; grid-template-columns: 160px 1fr; gap: 0; border: 1px solid #222; border-top: none; background: var(--dark2); cursor: pointer; transition: border-color 0.2s, background 0.2s; overflow: hidden; }
+    .article-card:first-child { border-top: 1px solid #222; }
+    .article-card:hover { border-color: var(--red); background: var(--dark3); }
+    .article-thumb { overflow: hidden; }
+    .article-thumb img { width: 100%; height: 120px; object-fit: cover; display: block; transition: transform 0.4s; }
+    .article-card:hover .article-thumb img { transform: scale(1.06); }
+    .article-body { padding: 18px 22px; display: flex; flex-direction: column; justify-content: space-between; }
+    .article-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .article-title { font-size: 0.95rem; font-weight: bold; line-height: 1.55; margin-bottom: 8px; }
+    .article-excerpt { font-size: 0.77rem; color: var(--gray); line-height: 1.75; }
+    .article-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+    .article-views { font-size: 0.68rem; color: var(--gray2); display: flex; align-items: center; gap: 4px; }
+
+    .no-articles { padding: 48px; text-align: center; color: var(--gray); font-size: 0.88rem; background: var(--dark2); border: 1px solid #222; }
+
+    .pagination { display: flex; gap: 4px; margin-top: 32px; justify-content: center; }
+    .page-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--dark2); border: 1px solid #333; color: var(--gray); font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .page-btn:hover, .page-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
+
+    .sidebar { display: flex; flex-direction: column; gap: 32px; }
+    .sidebar-block { background: var(--dark2); border: 1px solid #222; }
+    .sidebar-block-head { padding: 14px 20px; border-bottom: 1px solid #2a2a2a; font-size: 0.7rem; letter-spacing: 0.2em; color: var(--red-light); display: flex; align-items: center; gap: 8px; }
+    .sidebar-block-head::before { content: ''; display: block; width: 3px; height: 14px; background: var(--red); }
+    .sidebar-block-body { padding: 20px; }
+
+    .profile-img-wrap { text-align: center; margin-bottom: 16px; }
+    .profile-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--red); display: inline-block; }
+    .profile-name { text-align: center; font-size: 1rem; font-weight: 900; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .profile-role { text-align: center; font-size: 0.68rem; color: var(--red-light); letter-spacing: 0.15em; margin-bottom: 14px; }
+    .profile-bio { font-size: 0.78rem; color: var(--gray); line-height: 1.85; }
+    .profile-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: #1a1a1a; margin-top: 16px; }
+    .stat-item { background: var(--dark3); padding: 12px 8px; text-align: center; }
+    .stat-num { font-size: 1.1rem; font-weight: 900; color: var(--red-light); }
+    .stat-label { font-size: 0.6rem; color: var(--gray); letter-spacing: 0.08em; margin-top: 2px; }
+
+    .popular-list { display: flex; flex-direction: column; gap: 0; }
+    .popular-item { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid #1e1e1e; cursor: pointer; transition: opacity 0.2s; }
+    .popular-item:last-child { border-bottom: none; }
+    .popular-item:hover { opacity: 0.75; }
+    .popular-item img { width: 64px; height: 48px; object-fit: cover; display: block; }
+    .popular-item-title { font-size: 0.78rem; line-height: 1.5; font-weight: bold; }
+    .popular-item-date { font-size: 0.65rem; color: var(--gray); margin-top: 3px; }
+
+    .cat-list { display: flex; flex-direction: column; gap: 2px; }
+    .cat-list-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--dark3); cursor: pointer; font-size: 0.82rem; transition: background 0.2s, color 0.2s; border-left: 2px solid transparent; }
+    .cat-list-item:hover { background: #2a1010; border-left-color: var(--red); color: var(--red-light); }
+    .cat-count { font-size: 0.68rem; color: var(--gray); background: #111; padding: 1px 8px; }
+
+    .archive-list { display: flex; flex-direction: column; gap: 2px; }
+    .archive-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; font-size: 0.8rem; color: var(--gray); cursor: pointer; transition: color 0.2s; border-bottom: 1px solid #1a1a1a; }
+    .archive-item:hover { color: var(--red-light); }
+    .archive-item:last-child { border-bottom: none; }
+
+    .sns-links { display: flex; gap: 10px; }
+    .sns-btn { flex: 1; padding: 10px 0; text-align: center; background: var(--dark3); border: 1px solid #333; color: var(--gray); font-size: 0.72rem; letter-spacing: 0.08em; cursor: pointer; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: background 0.2s, border-color 0.2s, color 0.2s; }
+    .sns-btn:hover { background: var(--red); border-color: var(--red); color: #fff; }
+    .sns-btn svg { width: 18px; height: 18px; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 500; display: none; align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto; backdrop-filter: blur(6px); }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--dark); border: 1px solid #333; max-width: 780px; width: 100%; position: relative; animation: modalIn 0.25s ease; }
+    @keyframes modalIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+    .modal-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; background: rgba(0,0,0,0.5); border: 1px solid #444; color: var(--gray); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: background 0.2s; font-family: inherit; line-height: 1; }
+    .modal-close:hover { background: var(--red); color: #fff; }
+    .modal-hero { width: 100%; height: 300px; object-fit: cover; display: block; }
+    .modal-body { padding: 36px 40px 48px; }
+    .modal-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .modal-title { font-size: 1.5rem; font-weight: 900; line-height: 1.4; margin-bottom: 20px; letter-spacing: 0.03em; }
+    .modal-author { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #222; }
+    .modal-author img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--red); }
+    .modal-author-name { font-size: 0.82rem; font-weight: bold; }
+    .modal-author-role { font-size: 0.68rem; color: var(--gray); }
+    .modal-content { font-size: 0.9rem; line-height: 2; color: #ccc; }
+    .modal-content p { margin-bottom: 1.4em; }
+    .modal-content h3 { font-size: 1.05rem; font-weight: 900; color: var(--white); margin: 2em 0 0.8em; padding-left: 12px; border-left: 3px solid var(--red); }
+    .modal-content .highlight-box { background: var(--dark2); border-left: 3px solid var(--red); padding: 16px 20px; margin: 1.5em 0; font-size: 0.85rem; color: var(--gray); }
+    .modal-tags { margin-top: 32px; padding-top: 20px; border-top: 1px solid #222; display: flex; gap: 8px; flex-wrap: wrap; }
+    .modal-tag-item { font-size: 0.68rem; color: var(--gray); border: 1px solid #333; padding: 3px 12px; }
+    .modal-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 32px; background: #1a1a1a; }
+    .modal-nav-btn { background: var(--dark2); padding: 16px 20px; cursor: pointer; transition: background 0.2s; border: none; color: var(--white); font-family: inherit; text-align: left; }
+    .modal-nav-btn.next { text-align: right; }
+    .modal-nav-btn:hover { background: var(--dark3); }
+    .modal-nav-label { font-size: 0.65rem; color: var(--gray); letter-spacing: 0.1em; margin-bottom: 4px; }
+    .modal-nav-title { font-size: 0.8rem; font-weight: bold; }
+
+    /* 管理ボタン */
+    .admin-link { position: fixed; bottom: 24px; right: 24px; z-index: 300; background: var(--dark2); border: 1px solid #444; color: var(--gray); text-decoration: none; font-size: 0.72rem; letter-spacing: 0.1em; padding: 10px 18px; display: flex; align-items: center; gap: 8px; transition: border-color 0.2s, color 0.2s; }
+    .admin-link:hover { border-color: var(--red); color: var(--red-light); }
+
+    footer { background: var(--dark); border-top: 1px solid #1a1a1a; padding: 40px 48px; text-align: center; }
+    .footer-copy { font-size: 0.7rem; color: #444; letter-spacing: 0.1em; }
+    .footer-home { display: inline-block; margin-bottom: 14px; color: var(--gray); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.1em; transition: color 0.2s; }
+    .footer-home:hover { color: var(--red-light); }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img src="logo-horizontal.png" alt="ラーメン鳳凰">
+    <span>ラーメン鳳凰</span>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links-sub">
+      <li><a href="blog.html" class="active" data-i18n="nav-blog">店長ブログ</a></li>
+      <li><a href="recruit.html" data-i18n="nav-recruit">採用情報</a></li>
+      <li><a href="index.html#menu" data-i18n="nav-menu">メニュー</a></li>
+      <li><a href="index.html#access" data-i18n="nav-access">アクセス</a></li>
+    </ul>
+    <a class="nav-back" href="index.html" data-i18n="nav-top">← TOP</a>
+    <button class="lang-toggle" onclick="toggleLang()" data-current="ja">EN</button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="page-hero-label" data-i18n="blog-page-label">MASTER'S BLOG</p>
+    <h1 class="page-hero-title" data-i18n="blog-page-title">店長ブログ</h1>
+    <p class="page-hero-sub" data-i18n="blog-page-sub">仕込みの裏側、素材へのこだわり、日々の出来事をお届けします。</p>
+    <div class="category-tabs" id="categoryTabs"></div>
+  </div>
+</div>
+
+<div class="main-wrap">
+  <div class="left-col">
+    <div id="featuredWrap"></div>
+    <div class="article-list" id="articleList"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <aside class="sidebar">
+    <!-- 店長プロフィール -->
+    <div class="sidebar-block">
+      <div class="sidebar-block-head">店長プロフィール</div>
+      <div class="sidebar-block-body">
+        <div class="profile-img-wrap"><img src="ra/shop1.webp" alt="店長" class="profile-img"></div>
+        <div class="profile-name">鈴木 誠一</div>
+        <div class="profile-role">MASTER / CHEF</div>
+        <p class="profile-bio">18歳から修行を始め、東京・大阪・博多の名店で計18年間腕を磨く。「一杯のラーメンで人を幸せにしたい」という想いを胸に、2026年7月に独立。得意は豚骨醤油と辛味噌。趣味は全国のラーメン食べ歩き。</p>
+        <div class="profile-stats">
+          <div class="stat-item"><div class="stat-num">18</div><div class="stat-label">修行年数</div></div>
+          <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">在籍店舗数</div></div>
+          <div class="stat-item"><div class="stat-num">100+</div><div class="stat-label">試作回数</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 人気記事 -->
+    <div class="sidebar-block">
+      <div class="sidebar-block-head">人気の記事</div>
+      <div class="sidebar-block-body" style="padding:12px 16px;">
+        <div class="popular-list" id="popularList"></div>
+      </div>
+    </div>
+
+    <!-- カテゴリ -->
+    <div class="sidebar-block">
+      <div class="sidebar-block-head">カテゴリ</div>
+      <div class="sidebar-block-body" style="padding:12px 16px;">
+        <div class="cat-list" id="catListWrap"></div>
+      </div>
+    </div>
+
+    <!-- アーカイブ -->
+    <div class="sidebar-block">
+      <div class="sidebar-block-head">アーカイブ</div>
+      <div class="sidebar-block-body" style="padding:8px 16px;">
+        <div class="archive-list" id="archiveListWrap"></div>
+      </div>
+    </div>
+
+    <!-- SNS -->
+    <div class="sidebar-block">
+      <div class="sidebar-block-head">フォローする</div>
+      <div class="sidebar-block-body">
+        <div class="sns-links">
+          <a class="sns-btn" href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            Instagram
+          </a>
+          <a class="sns-btn" href="#">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 9.99 9.99 0 01-3.127 1.195 4.929 4.929 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+            X (Twitter)
+          </a>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <a class="footer-home" href="index.html">← ラーメン鳳凰 トップページへ</a>
+  <p class="footer-copy">&copy; 2026 ラーメン鳳凰 All Rights Reserved.</p>
+</footer>
+
+<!-- 管理ページへのリンク -->
+<a class="admin-link" href="admin.html">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+  管理画面
+</a>
+
+<!-- モーダル -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+    <img class="modal-hero" id="modalImg" src="" alt="">
+    <div class="modal-body">
+      <div class="modal-meta">
+        <span class="post-date" id="modalDate"></span>
+        <span class="post-tag" id="modalTag"></span>
+      </div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-author">
+        <img src="ra/shop1.webp" alt="店長">
+        <div>
+          <div class="modal-author-name">鈴木 誠一</div>
+          <div class="modal-author-role">ラーメン鳳凰 店長</div>
+        </div>
+      </div>
+      <div class="modal-content" id="modalContent"></div>
+      <div class="modal-tags" id="modalTagsWrap"></div>
+      <div class="modal-nav">
+        <button class="modal-nav-btn" id="modalPrev" onclick="navigateModal(-1)">
+          <div class="modal-nav-label">&#x2190; 前の記事</div>
+          <div class="modal-nav-title" id="modalPrevTitle"></div>
+        </button>
+        <button class="modal-nav-btn next" id="modalNext" onclick="navigateModal(1)">
+          <div class="modal-nav-label">次の記事 &#x2192;</div>
+          <div class="modal-nav-title" id="modalNextTitle"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== デフォルト記事データ（初期値） =====
+const DEFAULT_POSTS = [
+  {
+    id: 1,
+    img: 'ra/broth.jpg',
+    date: '2026.06.10',
+    tag: '仕込み',
+    title: '18時間スープの秘密を、少しだけ公開します',
+    excerpt: 'いよいよオープンまで3週間を切りました。毎朝4時に厨房に入り、豚骨と鶏ガラを大鍋に放り込む瞬間が、私にとって一日の始まりです。骨の比率、火加減、アク取りのタイミング——18年かけて積み上げてきたこの工程を、今日は少しだけご紹介しようと思います。',
+    tags: ['豚骨', '鶏ガラ', 'スープ', '仕込み', '職人'],
+    views: 389,
+    content: '<p>いよいよオープンまで3週間を切りました。毎朝4時に厨房に入り、豚骨と鶏ガラを大鍋に放り込む瞬間が、私にとって一日の始まりです。蒸気が上がるあの瞬間に、「今日もやるぞ」という気持ちが湧いてきます。</p><h3>素材選びから始まる</h3><p>使用するのは鹿児島県産の豚骨と、青森県産の鶏ガラ。どちらも生産者と直接契約しています。最初は業者から仕入れようとしていたのですが、試食を重ねるうちに「これじゃない」と感じて、結局自分の足で産地を巡りました。</p><div class="highlight-box">豚骨：鶏ガラ＝6：4 がうちの黄金比です。この比率に落ち着くまでに半年かかりました。</div><h3>火加減が命</h3><p>最初の2時間は強火で炊いて白濁させます。コラーゲンをしっかり溶け出させるためです。その後14時間は中火でじっくり。灰汁を丁寧に取り除きながら、水分が蒸発するのに合わせて少しずつ水を足していきます。</p><p>「なぜ18時間なの？」とよく聞かれます。答えは単純で、それ以上でも以下でも、私の求める味にならないからです。18時間が「鳳凰の味」になる境界線なんです。</p><h3>最後の仕上げ</h3><p>炊き上がったスープを漉して、秘伝の醤油ダレを合わせ、仕上げに焦がしニンニク油を垂らします。この瞬間、スープが「ラーメンのスープ」に変わります。毎回この瞬間が一番好きです。</p><p>次回は醤油ダレの仕込みについて書こうと思います。お楽しみに！</p>'
+  },
+  {
+    id: 2,
+    img: 'ra/noodles.jpg',
+    date: '2026.06.05',
+    tag: '麺',
+    title: '自家製麺の試作、ついに100回目を迎えました',
+    excerpt: '北海道産小麦「春よ恋」100%で打った麺は、スープとの絡み方が市販品とはまるで違います。今日でやっと納得のいく仕上がりに…',
+    tags: ['自家製麺', '小麦', '春よ恋', '北海道'],
+    views: 248,
+    content: '<p>ついにやりました。自家製麺の試作、100回目です。最初の試作から約6ヶ月。毎日のように麺を打ち続けてきた日々が、ようやく報われた気がします。</p><h3>なぜ自家製麺にこだわるのか</h3><p>市販の麺でも美味しいラーメンは作れます。でも、「鳳凰のスープに一番合う麺」を作れるのは、自分だけだと思っています。スープの粘度、塩分濃度、提供温度——すべてに合わせて麺を調整できるのが自家製のメリットです。</p><div class="highlight-box">加水率38%・かん水0.3%・熟成時間18時間——これが現時点での最高レシピです。</div><h3>100回目の感想</h3><p>正直に言うと、まだ99%の出来だと思っています。でも残りの1%は、お客様に食べていただきながら磨いていくものだと思っています。オープンしてからも、ずっと改良し続けます。</p>'
+  },
+  {
+    id: 3,
+    img: 'ra/chashu.jpg',
+    date: '2026.05.28',
+    tag: 'トッピング',
+    title: '12時間寝かせるとろとろチャーシューのこだわり',
+    excerpt: '低温調理68度×6時間のあとに秘伝のタレに12時間漬け込む。この二段仕込みが、口の中でほどける食感を生み出します。',
+    tags: ['チャーシュー', '低温調理', '豚バラ', 'トッピング'],
+    views: 312,
+    content: '<p>ラーメンのトッピングの中で、チャーシューへのこだわりは人一倍あります。「チャーシューだけでも食べたい」と思われるものを作りたくて、開店前から研究を重ねてきました。</p><h3>二段仕込みの理由</h3><p>うちのチャーシューは、低温調理とタレ漬けの二段仕込みです。まず68度のお湯で6時間、豚バラ肉を低温調理します。この温度と時間が、肉をやわらかくしつつジューシーさを保つ鍵です。</p><div class="highlight-box">68度という温度は、コラーゲンがゼラチン化しはじめる温度です。これより高いと肉が締まり、低いと仕上がりが不安定になります。</div><h3>秘伝のタレ漬け</h3><p>低温調理の後、醤油・みりん・酒・砂糖・生姜・ネギで作った秘伝のタレに12時間漬け込みます。この工程で、肉の中心まで旨みが染み込みます。</p><h3>提供の瞬間</h3><p>注文が入ったら、バーナーで表面を軽く炙ります。この一手間で香ばしさが増し、ラーメンの熱で溶けていく脂の甘さが引き立ちます。</p>'
+  },
+  {
+    id: 4,
+    img: 'ra/shop1.webp',
+    date: '2026.05.20',
+    tag: 'お知らせ',
+    title: '内装が完成！黒と赤にこだわった空間をお見せします',
+    excerpt: 'カウンター8席は職人の手元が見える高さに設計。テーブルの木材は栃木県産の古材を使用しました。ぜひ実際に来てご覧ください。',
+    tags: ['店舗', '内装', 'インテリア', 'オープン'],
+    views: 421,
+    content: '<p>長らくお待たせしました。ラーメン鳳凰の店舗内装がついに完成しました！</p><h3>テーマは「潔い黒と、情熱の赤」</h3><p>黒を基調とした落ち着いた空間に、赤のアクセントを効かせました。カウンターは黒塗りのヒノキ材。テーブルは栃木県から取り寄せた古材を使用しています。</p><h3>カウンター席のこだわり</h3><p>カウンター8席は、職人の手元が見える高さに設計しました。スープを注ぐ瞬間、麺を盛り付ける瞬間——ラーメンが完成するまでの工程を間近で楽しんでいただけます。</p><div class="highlight-box">厨房とカウンターの間に仕切りはありません。声をかけてもらえれば、素材や仕込みについてお答えします！</div><h3>7月1日、お待ちしています</h3><p>グランドオープンは2026年7月1日（火）です。当日は先着30名様にトッピング無料券をプレゼントします。</p>'
+  },
+  {
+    id: 5,
+    img: 'gyoza.jpg',
+    date: '2026.05.12',
+    tag: '食材',
+    title: '産地直送の豚肉を使った餃子、試食会を開催しました',
+    excerpt: '宮崎県の農場から直接仕入れる豚ミンチは、臭みがなく旨味が全然違います。ニンニク控えめ、キャベツ多めの鳳凰スタイル餃子が完成。',
+    tags: ['餃子', '豚肉', '宮崎', 'サイドメニュー'],
+    views: 187,
+    content: '<p>先日、スタッフを集めて餃子の試食会を開きました。今回のテーマは「ラーメンに負けないサイドメニューを作る」こと。</p><h3>宮崎県産豚ミンチの発見</h3><p>きっかけは知人の農家さんの紹介でした。宮崎県の農場で育てられた豚肉は、えさから飼育環境まで徹底管理されており、臭みが全くなく旨みが凝縮されています。</p><h3>鳳凰スタイルの餃子</h3><p>具材はシンプルに。豚ミンチ・キャベツ・ニラ・ショウガのみです。ニンニクは控えめにして、翌日に持ち越さない配慮をしています。</p><div class="highlight-box">皮は市販品を使わず、自家製です。モチモチとした厚みのある皮が、肉汁を閉じ込めます。</div><p>6個380円でご提供します。ラーメンと一緒にぜひどうぞ。</p>'
+  },
+  {
+    id: 6,
+    img: 'ramen-spicy.jpg',
+    date: '2026.05.05',
+    tag: '仕込み',
+    title: '赤鬼辛らーめんの辛味噌、仕込み開始しました',
+    excerpt: '唐辛子は4種類をブレンド。辛いだけでなく「旨みのある辛さ」を目指して試行錯誤中です。辛口・激辛・鬼辛の3段階をご用意します。',
+    tags: ['辛味噌', '辛さ', '赤鬼辛', '唐辛子'],
+    views: 295,
+    content: '<p>「辛いだけのラーメンは作りたくない」——これが赤鬼辛らーめんを開発する上での最初の誓いです。</p><h3>4種の唐辛子ブレンド</h3><p>使用する唐辛子は4種類。韓国産の粗びきコチュカル、鷹の爪、乾燥ハバネロ、そして沖縄の島唐辛子です。それぞれ風味と辛さの質が異なります。</p><div class="highlight-box">辛さ3段階：辛口（★★☆）・激辛（★★★）・鬼辛（＊注意＊）。鬼辛は事前に覚悟の確認をする場合があります。</div><h3>旨みの層を作る</h3><p>唐辛子だけでなく、味噌・豆板醤・甜麺醤を合わせてコクを出しています。完成品はまず辛さより旨みが来て、後から熱い波が押し寄せてくる感じです。</p>'
+  },
+  {
+    id: 7,
+    img: 'beer.jpg',
+    date: '2026.04.28',
+    tag: '日常',
+    title: 'ラーメンとビール——最高の組み合わせについて語ります',
+    excerpt: '夜営業では生ビールもご提供します。個人的にはキレのある喉越しの一杯が、濃厚醤油ラーメンの後に飲むと最高だと思っています。',
+    tags: ['ビール', '夜営業', 'お酒', '個人的見解'],
+    views: 143,
+    content: '<p>夜のラーメン屋で飲む生ビールは、格別です。今日は完全に個人的な意見として、「ラーメンとビールの最高な組み合わせ」について語らせてください。</p><h3>ラーメン後の一杯</h3><p>私は断然「ラーメン後の一杯」派です。濃厚な醤油スープを堪能した後に飲む、キレのある生ビール。ラーメンの余韻を流しながら、また「もう一杯食べたい」という気持ちになる——この循環が最高なんです。</p><div class="highlight-box">夜18時以降は「ラーメン＋生ビール」セットを特別価格でご提供予定です。詳細は後日発表します！</div>'
+  },
+  {
+    id: 8,
+    img: 'karaage.jpg',
+    date: '2026.04.18',
+    tag: '食材',
+    title: 'サイドの唐揚げ、下味にもこだわっています',
+    excerpt: '醤油・酒・生姜・にんにくで24時間漬け込み、片栗粉と薄力粉を合わせた衣でサクッと揚げます。ラーメンのお供に最高の一品。',
+    tags: ['唐揚げ', '鶏もも肉', '下味', 'サイドメニュー'],
+    views: 162,
+    content: '<p>ラーメン屋の唐揚げって、侮れないんです。むしろメインのラーメンと同じくらい、こだわりを持って作るべきだと思っています。</p><h3>24時間下味の意味</h3><p>醤油・酒・みりん・生姜・にんにくを合わせたタレに24時間漬け込みます。「そんなに長く必要なの？」と思われるかもしれませんが、12時間と24時間では味の入り方が全然違います。</p><div class="highlight-box">衣は片栗粉7：薄力粉3の割合です。カリッとした表面と、中のジューシーさのバランスが一番いい比率です。</div><p>3個380円でご提供します。ラーメンのお供に、ビールのお供に、ぜひ。</p>'
+  },
+  {
+    id: 9,
+    img: 'tamago-kake-gohan.jpg',
+    date: '2026.04.08',
+    tag: '日常',
+    title: 'スタッフのまかないはTKGご飯——シンプルが最高',
+    excerpt: '毎日ラーメンを食べていると、休憩のTKGがほっとします。使っているのは茨城県産コシヒカリと、地元農家の有精卵。シンプルだけど最高です。',
+    tags: ['まかない', 'TKG', '卵かけごはん', 'スタッフ'],
+    views: 98,
+    content: '<p>「毎日ラーメン食べてるんですか？」とよく聞かれます。もちろん試食は毎日しますが、まかないはTKGご飯（卵かけご飯）なことが多いです。</p><h3>なぜTKGなのか</h3><p>答えは単純で、一番おいしいからです。濃厚なスープや複雑な調味料に囲まれた仕事の中で、シンプルな卵と米のうまさは格別です。</p><div class="highlight-box">ちなみにこの卵、メニューの「TKGご飯」でも使っています。180円なのでぜひ試してみてください。</div>'
+  }
+];
+
+// ===== データ管理 =====
+const STORAGE_KEY = 'houou_blog_posts';
+const CATEGORIES = ['仕込み', '麺', 'トッピング', '食材', 'お知らせ', '日常'];
+const PER_PAGE = 5;
+
+function loadPosts() {
+  // posts.js が存在する場合はそちらを優先（公開サイト用）
+  if (window.BLOG_POSTS && window.BLOG_POSTS.length) {
+    // 管理画面でも編集中のデータがあれば localStorage を優先
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const local = JSON.parse(saved);
+        // localStorage の方が記事数が多い or 更新が新しければ使う
+        if (local.length >= window.BLOG_POSTS.length) return local;
+      }
+    } catch(e) {}
+    return window.BLOG_POSTS;
+  }
+  // posts.js がない場合は localStorage → DEFAULT_POSTS
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_POSTS));
+  return DEFAULT_POSTS;
+}
+
+let posts = loadPosts();
+let currentCat = 'all';
+let currentPage = 1;
+let currentModalIdx = 0;
+
+// ===== レンダリング =====
+function filteredPosts() {
+  return currentCat === 'all' ? posts : posts.filter(p => p.tag === currentCat);
+}
+
+function render() {
+  renderCategoryTabs();
+  renderFeatured();
+  renderArticleList();
+  renderPagination();
+  renderPopular();
+  renderCatList();
+  renderArchive();
+}
+
+function renderCategoryTabs() {
+  const tabs = document.getElementById('categoryTabs');
+  const all = ['all', ...CATEGORIES];
+  const labels = { all: 'すべて' };
+  tabs.innerHTML = all.map(c =>
+    `<button class="cat-tab${currentCat === c ? ' active' : ''}" onclick="setCat('${c}')">${labels[c] || c}</button>`
+  ).join('');
+}
+
+function renderFeatured() {
+  const wrap = document.getElementById('featuredWrap');
+  if (!posts.length) { wrap.innerHTML = ''; return; }
+  const p = posts[0];
+  const idx = posts.indexOf(p);
+  wrap.innerHTML = `
+    <div class="featured-card" onclick="openModal(${idx})">
+      <img src="${p.img}" alt="${p.title}" onerror="this.src='ramen-rich.jpg'">
+      <div class="featured-badge">FEATURED</div>
+      <div class="featured-body">
+        <div class="featured-meta">
+          <span class="post-date">${p.date}</span>
+          <span class="post-tag">${p.tag}</span>
+        </div>
+        <div class="featured-title">${p.title}</div>
+        <div class="featured-excerpt">${p.excerpt}</div>
+        <span class="read-more">続きを読む
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </div>
+    </div>`;
+}
+
+function renderArticleList() {
+  const list = document.getElementById('articleList');
+  const fp = filteredPosts();
+  const start = (currentPage - 1) * PER_PAGE;
+  // featured は先頭記事なので、全件表示の1ページ目は2番目以降を表示
+  const slice = currentCat === 'all'
+    ? fp.slice(Math.max(1, start), start + PER_PAGE + (start === 0 ? 1 : 0)).filter((_, i) => !(start === 0 && i === 0 && currentCat === 'all'))
+    : fp.slice(start, start + PER_PAGE);
+
+  if (!slice.length && fp.length <= 1 && currentCat === 'all') {
+    list.innerHTML = ''; return;
+  }
+  if (!slice.length) {
+    list.innerHTML = '<div class="no-articles">この条件の記事はまだありません。</div>'; return;
+  }
+
+  list.innerHTML = slice.map(p => {
+    const idx = posts.indexOf(p);
+    return `
+    <div class="article-card" onclick="openModal(${idx})">
+      <div class="article-thumb"><img src="${p.img}" alt="${p.title}" onerror="this.src='ramen-rich.jpg'"></div>
+      <div class="article-body">
+        <div>
+          <div class="article-meta">
+            <span class="post-date">${p.date}</span>
+            <span class="post-tag">${p.tag}</span>
+          </div>
+          <div class="article-title">${p.title}</div>
+          <div class="article-excerpt">${p.excerpt}</div>
+        </div>
+        <div class="article-footer">
+          <span class="post-date">${p.date}</span>
+          <span class="article-views">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            ${p.views || 0}
+          </span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderPagination() {
+  const pg = document.getElementById('pagination');
+  const fp = filteredPosts();
+  // all表示：featured(1件) + リスト(残り) で計算
+  const listCount = currentCat === 'all' ? Math.max(0, fp.length - 1) : fp.length;
+  const totalPages = Math.max(1, Math.ceil(listCount / PER_PAGE));
+  if (totalPages <= 1) { pg.innerHTML = ''; return; }
+  let btns = '';
+  for (let i = 1; i <= totalPages; i++) {
+    btns += `<button class="page-btn${i === currentPage ? ' active' : ''}" onclick="setPage(${i})">${i}</button>`;
+  }
+  if (currentPage < totalPages) btns += `<button class="page-btn" onclick="setPage(${currentPage + 1})">&#x203A;</button>`;
+  pg.innerHTML = btns;
+}
+
+function renderPopular() {
+  const sorted = [...posts].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 4);
+  document.getElementById('popularList').innerHTML = sorted.map(p => {
+    const idx = posts.indexOf(p);
+    return `
+    <div class="popular-item" onclick="openModal(${idx})">
+      <img src="${p.img}" alt="${p.title}" onerror="this.src='ramen-rich.jpg'">
+      <div>
+        <div class="popular-item-title">${p.title}</div>
+        <div class="popular-item-date">${p.date} &middot; ${p.views || 0} views</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderCatList() {
+  const counts = {};
+  CATEGORIES.forEach(c => counts[c] = posts.filter(p => p.tag === c).length);
+  document.getElementById('catListWrap').innerHTML =
+    `<div class="cat-list-item" onclick="setCat('all')">すべての記事<span class="cat-count">${posts.length}</span></div>` +
+    CATEGORIES.map(c =>
+      `<div class="cat-list-item" onclick="setCat('${c}')">${c}<span class="cat-count">${counts[c]}</span></div>`
+    ).join('');
+}
+
+function renderArchive() {
+  const monthMap = {};
+  posts.forEach(p => {
+    const m = p.date.substring(0, 7).replace('.', '年') + '月';
+    monthMap[m] = (monthMap[m] || 0) + 1;
+  });
+  document.getElementById('archiveListWrap').innerHTML = Object.entries(monthMap)
+    .map(([m, c]) => `<div class="archive-item"><span>${m}</span><span>${c}件</span></div>`)
+    .join('');
+}
+
+// ===== インタラクション =====
+function setCat(cat) {
+  currentCat = cat;
+  currentPage = 1;
+  render();
+}
+
+function setPage(page) {
+  currentPage = page;
+  renderArticleList();
+  renderPagination();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== モーダル =====
+function openModal(idx) {
+  currentModalIdx = idx;
+  const p = posts[idx];
+  document.getElementById('modalImg').src = p.img;
+  document.getElementById('modalDate').textContent = p.date;
+  document.getElementById('modalTag').textContent = p.tag;
+  document.getElementById('modalTitle').textContent = p.title;
+  document.getElementById('modalContent').innerHTML = p.content || '<p>' + p.excerpt + '</p>';
+  document.getElementById('modalTagsWrap').innerHTML =
+    (p.tags || []).map(t => `<span class="modal-tag-item"># ${t}</span>`).join('');
+
+  const prev = posts[idx - 1], next = posts[idx + 1];
+  const prevBtn = document.getElementById('modalPrev');
+  const nextBtn = document.getElementById('modalNext');
+  document.getElementById('modalPrevTitle').textContent = prev ? prev.title : 'ー';
+  document.getElementById('modalNextTitle').textContent = next ? next.title : 'ー';
+  prevBtn.style.opacity = prev ? '1' : '0.3';
+  prevBtn.style.pointerEvents = prev ? 'auto' : 'none';
+  nextBtn.style.opacity = next ? '1' : '0.3';
+  nextBtn.style.pointerEvents = next ? 'auto' : 'none';
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('modal').scrollTop = 0;
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function navigateModal(dir) {
+  const next = currentModalIdx + dir;
+  if (next >= 0 && next < posts.length) openModal(next);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'ArrowLeft') navigateModal(-1);
+  if (e.key === 'ArrowRight') navigateModal(1);
+});
+
+// ===== 初期描画 =====
+render();
+</script>
+<script src="translations.js"></script>
+<script src="lang.js"></script>
+</body>
+</html>
