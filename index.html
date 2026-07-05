@@ -277,12 +277,6 @@
       position: relative;
     }
 
-    .concept-image img {
-      width: 100%;
-      height: 420px;
-      object-fit: cover;
-    }
-
     .concept-image::before {
       content: '';
       position: absolute;
@@ -591,9 +585,58 @@
       opacity: 0;
       transition: opacity 1.2s ease-in-out;
       filter: brightness(0.35);
+      transform: scale(1);
     }
 
-    .hero-slide.active { opacity: 1; }
+    .hero-slide.active {
+      opacity: 1;
+      animation: kenburns 5s ease-out forwards;
+    }
+
+    @keyframes kenburns {
+      from { transform: scale(1); }
+      to   { transform: scale(1.12); }
+    }
+
+    /* 炎のエンバー演出 */
+    .hero-embers {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .ember {
+      position: absolute;
+      bottom: -10px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffd27a 0%, var(--red-light) 55%, transparent 100%);
+      box-shadow: 0 0 6px 1px rgba(231,76,60,0.55);
+      opacity: 0;
+      animation: emberRise linear infinite;
+    }
+
+    @keyframes emberRise {
+      0%   { transform: translate(0, 0) scale(0.6); opacity: 0; }
+      10%  { opacity: 0.9; }
+      85%  { opacity: 0.4; }
+      100% { transform: translate(var(--drift, 20px), -105vh) scale(1); opacity: 0; }
+    }
+
+    /* ヒーローの登場アニメーション */
+    @keyframes heroRise {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-badge      { animation: heroRise 0.8s ease-out 0.1s both; }
+    .hero-title      { animation: heroRise 0.9s ease-out 0.25s both; }
+    .hero-sub        { animation: heroRise 0.9s ease-out 0.4s both; }
+    .hero-cta        { animation: heroRise 0.8s ease-out 0.55s both; }
+    .hero-quick-links{ animation: heroRise 0.8s ease-out 0.7s both; }
 
     /* スライドインジケーター */
     .hero-indicators {
@@ -665,14 +708,45 @@
     }
 
     /* スクロールアニメーション */
-    .fade-in {
+    .fade-in, .fade-in-left, .fade-in-right {
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s, transform 0.7s;
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    .fade-in.visible {
+    .fade-in       { transform: translateY(30px); }
+    .fade-in-left  { transform: translateX(-48px); }
+    .fade-in-right { transform: translateX(48px); }
+
+    .fade-in.visible,
+    .fade-in-left.visible,
+    .fade-in-right.visible {
       opacity: 1;
       transform: none;
+    }
+
+    .features-grid .feature-item:nth-child(1) { transition-delay: 0s; }
+    .features-grid .feature-item:nth-child(2) { transition-delay: 0.12s; }
+    .features-grid .feature-item:nth-child(3) { transition-delay: 0.24s; }
+
+    /* コンセプト画像のパララックス用ラッパー */
+    .concept-image-inner {
+      overflow: hidden;
+      height: 420px;
+    }
+    .concept-image-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.15);
+      will-change: transform;
+    }
+
+    /* 動きを抑えたい環境への配慮 */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-slide.active { animation: none; }
+      .hero-badge, .hero-title, .hero-sub, .hero-cta, .hero-quick-links { animation: none; opacity: 1; transform: none; }
+      .hero-embers { display: none; }
+      .fade-in, .fade-in-left, .fade-in-right { transition: none; }
     }
 
     /* ハンバーガーメニュー（モバイル） */
@@ -725,7 +799,7 @@
       section { padding: 64px 20px; }
 
       .concept { grid-template-columns: 1fr; gap: 36px; }
-      .concept-image img { height: 280px; }
+      .concept-image-inner { height: 280px; }
 
       .features-grid { grid-template-columns: 1fr; }
 
@@ -783,6 +857,7 @@
       <div class="hero-slide" style="background-image: url('ra/hero.jpg')"></div>
     </div>
     <div class="hero-overlay"></div>
+    <div class="hero-embers" id="heroEmbers"></div>
     <div class="hero-content">
       <div class="hero-badge" data-i18n="hero-badge">GRAND OPEN 2026.07.01</div>
       <h1 class="hero-title">ラーメン <span>鳳凰</span></h1>
@@ -808,11 +883,13 @@
 
   <!-- コンセプト -->
   <section id="concept">
-    <div class="concept fade-in">
-      <div class="concept-image">
-        <img src="ramen-rich.jpg" alt="こだわりの一杯">
+    <div class="concept">
+      <div class="concept-image fade-in-left">
+        <div class="concept-image-inner">
+          <img src="ramen-rich.jpg" alt="こだわりの一杯" id="conceptImg">
+        </div>
       </div>
-      <div class="concept-text">
+      <div class="concept-text fade-in-right">
         <p class="section-label">Our Concept</p>
         <h2 class="section-title" data-i18n="concept-title" data-i18n-html>炎で生まれる、<br>魂の一杯</h2>
         <div class="divider"></div>
@@ -835,18 +912,18 @@
         <h2 class="section-title" data-i18n="commit-title">鳳凰のこだわり</h2>
         <div class="divider"></div>
       </div>
-      <div class="features-grid fade-in">
-        <div class="feature-item">
+      <div class="features-grid">
+        <div class="feature-item fade-in-left">
           <div class="feature-number">01</div>
           <div class="feature-title" data-i18n="commit-1-title">18時間炊きのスープ</div>
           <div class="feature-desc" data-i18n="commit-1-desc">豚骨・鶏ガラ・野菜を18時間以上かけてじっくり炊き上げ。コラーゲンたっぷりの白濁スープが鳳凰の秘伝ダレと合わさることで、唯一無二の漆黒スープが完成します。</div>
         </div>
-        <div class="feature-item">
+        <div class="feature-item fade-in">
           <div class="feature-number">02</div>
           <div class="feature-title" data-i18n="commit-2-title">国産小麦の自家製麺</div>
           <div class="feature-desc" data-i18n="commit-2-desc">北海道産小麦「春よ恋」を使用した自家製ストレート麺。毎朝打ちたての麺は、濃厚スープとの相性を追求した特注の太麺仕様。モチモチとした食感をお楽しみください。</div>
         </div>
-        <div class="feature-item">
+        <div class="feature-item fade-in-right">
           <div class="feature-number">03</div>
           <div class="feature-title" data-i18n="commit-3-title">秘伝の焦がしニンニク油</div>
           <div class="feature-desc" data-i18n="commit-3-desc">仕上げに垂らす、独自製法の焦がしニンニク油。香ばしい香りとコクが、スープに立体的な深みを与えます。この油なくして「鳳凰」の味は語れません。</div>
@@ -1080,14 +1157,14 @@
 
     setInterval(() => goTo((current + 1) % slides.length), 4000);
 
-    // スクロールでフェードイン
+    // スクロールでフェードイン（上下・左右）
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) e.target.classList.add('visible');
       });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right').forEach(el => observer.observe(el));
 
     // ナビのスムーズスクロール
     document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -1100,6 +1177,68 @@
         document.getElementById('mainNav').classList.remove('nav-open');
       });
     });
+
+    // 動きを抑える設定を尊重
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // 炎のエンバー（火の粉）演出
+    if (!prefersReducedMotion) {
+      const emberWrap = document.getElementById('heroEmbers');
+      const EMBER_COUNT = 22;
+      for (let i = 0; i < EMBER_COUNT; i++) {
+        const ember = document.createElement('span');
+        ember.className = 'ember';
+        const size = 2 + Math.random() * 4;
+        ember.style.left = `${Math.random() * 100}%`;
+        ember.style.width = `${size}px`;
+        ember.style.height = `${size}px`;
+        ember.style.setProperty('--drift', `${(Math.random() - 0.5) * 120}px`);
+        ember.style.animationDuration = `${6 + Math.random() * 6}s`;
+        ember.style.animationDelay = `${Math.random() * 10}s`;
+        emberWrap.appendChild(ember);
+      }
+    }
+
+    // パララックス（ヒーロー背景・コンセプト画像）
+    if (!prefersReducedMotion) {
+      const heroEl = document.querySelector('.hero');
+      const heroSlidesEl = document.querySelector('.hero-slides');
+      const heroContentEl = document.querySelector('.hero-content');
+      const conceptImgEl = document.getElementById('conceptImg');
+      let ticking = false;
+
+      function updateParallax() {
+        const y = window.scrollY;
+
+        const heroHeight = heroEl.offsetHeight;
+        if (y < heroHeight) {
+          heroSlidesEl.style.transform = `translateY(${y * 0.3}px)`;
+          heroContentEl.style.transform = `translateY(${y * 0.4}px)`;
+          heroContentEl.style.opacity = Math.max(0, 1 - y / 500);
+        }
+
+        if (conceptImgEl) {
+          const rect = conceptImgEl.parentElement.getBoundingClientRect();
+          const winH = window.innerHeight;
+          if (rect.bottom > 0 && rect.top < winH) {
+            const progress = (winH - rect.top) / (winH + rect.height);
+            const offset = (progress - 0.5) * 50;
+            conceptImgEl.style.transform = `translateY(${offset}px) scale(1.15)`;
+          }
+        }
+
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(updateParallax);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      updateParallax();
+    }
   </script>
   <script src="translations.js"></script>
   <script src="lang.js"></script>
