@@ -674,6 +674,80 @@
       opacity: 1;
       transform: none;
     }
+
+    /* ハンバーガーメニュー（モバイル） */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 32px;
+      height: 32px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--white);
+      transition: transform 0.25s, opacity 0.25s;
+    }
+    nav.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    nav.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+    nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-toggle { display: flex; }
+      .nav-links {
+        position: fixed;
+        top: 64px; left: 0; right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(10,10,10,0.98);
+        border-bottom: 1px solid var(--red);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+      nav.nav-open .nav-links { max-height: 320px; }
+      .nav-links a {
+        display: block;
+        padding: 16px 24px;
+        border-top: 1px solid #222;
+        font-size: 0.9rem;
+      }
+
+      section { padding: 64px 20px; }
+
+      .concept { grid-template-columns: 1fr; gap: 36px; }
+      .concept-image img { height: 280px; }
+
+      .features-grid { grid-template-columns: 1fr; }
+
+      .menu-grid { grid-template-columns: 1fr; }
+
+      .side-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+
+      .access { grid-template-columns: 1fr; gap: 40px; }
+
+      .hero-title { letter-spacing: 0.08em; }
+      .hero-quick-links { gap: 10px; }
+      .hero-quick-link { padding: 8px 14px; font-size: 0.75rem; }
+
+      footer { padding: 48px 20px 28px; }
+    }
+
+    @media (max-width: 480px) {
+      .grand-open-bar { font-size: 0.65rem; letter-spacing: 0.12em; padding: 8px; }
+      .nav-logo span { display: none; }
+      section { padding: 48px 16px; }
+      .info-table th { width: 76px; }
+    }
   </style>
 </head>
 <body>
@@ -682,7 +756,7 @@
   <div class="grand-open-bar" data-i18n="open-bar">🎉 GRAND OPEN — 2026年7月1日（火）オープン！</div>
 
   <!-- ナビ -->
-  <nav>
+  <nav id="mainNav">
     <div class="nav-logo">
       <img src="logo-horizontal.png" alt="ラーメン鳳凰">
       <span>ラーメン鳳凰</span>
@@ -694,6 +768,9 @@
       <li><a href="#access" data-i18n="nav-access">アクセス</a></li>
     </ul>
     <button class="lang-toggle" onclick="toggleLang()" data-current="ja">EN</button>
+    <button class="nav-toggle" aria-label="メニューを開く" onclick="document.getElementById('mainNav').classList.toggle('nav-open')">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <!-- ヒーロー -->
@@ -737,7 +814,7 @@
       </div>
       <div class="concept-text">
         <p class="section-label">Our Concept</p>
-        <h2 class="section-title" data-i18n="concept-title">炎で生まれる、<br>魂の一杯</h2>
+        <h2 class="section-title" data-i18n="concept-title" data-i18n-html>炎で生まれる、<br>魂の一杯</h2>
         <div class="divider"></div>
         <p class="section-desc" data-i18n="concept-desc" data-i18n-html>
           厳選した豚骨・鶏ガラを18時間かけて炊き上げた漆黒のスープ。
@@ -796,7 +873,7 @@
             <img src="ramen-rich.jpg" alt="鳳凰醤油らーめん">
             <div class="menu-card-body">
               <div class="menu-card-name" data-i18n="menu1-name">鳳凰醤油らーめん</div>
-              <div class="menu-card-name-en">KURO-EN SOY SAUCE RAMEN</div>
+              <div class="menu-card-name-en">HOUOU SOY SAUCE RAMEN</div>
               <div class="menu-card-desc" data-i18n="menu1-desc">18時間炊きのスープに秘伝醤油ダレ。焦がしニンニク油を仕上げに加えた看板の一杯。チャーシュー3枚・味玉・メンマ・ねぎ入り。</div>
               <div class="menu-card-footer">
                 <div class="menu-card-price">¥980 <span data-i18n="tax-in">（税込）</span></div>
@@ -926,7 +1003,7 @@
         <table class="info-table">
           <tr>
             <th data-i18n="th-name">店名</th>
-            <td>ラーメン鳳凰（RAMEN HOUOU）</td>
+            <td data-i18n="info-name">ラーメン鳳凰（RAMEN HOUOU）</td>
           </tr>
           <tr>
             <th data-i18n="th-addr">住所</th>
@@ -1020,6 +1097,7 @@
           e.preventDefault();
           target.scrollIntoView({ behavior: 'smooth' });
         }
+        document.getElementById('mainNav').classList.remove('nav-open');
       });
     });
   </script>

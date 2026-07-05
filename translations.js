@@ -80,7 +80,7 @@ const TRANSLATIONS = {
     /* アクセス */
     'access-label':  'Access',
     'access-title':  'アクセス・営業情報',
-    'info-name':     '麺屋 鳳凰（RAMEN HOUOU）',
+    'info-name':     'ラーメン鳳凰（RAMEN HOUOU）',
     'info-addr':     '〒150-0001<br>東京都渋谷区神宮前1丁目1-1<br>鳳凰ビル1F',
     'info-station':  'JR原宿駅 徒歩5分<br>東京メトロ明治神宮前駅 徒歩3分',
     'info-hours':    '<span class="highlight">平日</span> 11:00〜15:00 / 18:00〜23:00<br><span class="highlight">土日祝</span> 11:00〜23:00（通し営業）',
@@ -116,12 +116,13 @@ const TRANSLATIONS = {
     'blog-follow':     'フォローする',
     'profile-name':    '鈴木 誠一',
     'profile-role':    'MASTER / CHEF',
-    'profile-bio':     '18歳から修行を始め、東京・大阪・博多の名店で計18年間腕を磨く。「一杯のラーメンで人を幸せにしたい」という想いを胸に、2026年7月に独立。',
+    'profile-bio':     '18歳から修行を始め、東京・大阪・博多の名店で計18年間腕を磨く。「一杯のラーメンで人を幸せにしたい」という想いを胸に、2026年7月に独立。得意は豚骨醤油と辛味噌。趣味は全国のラーメン食べ歩き。',
     'stat-years':      '修行年数',
     'stat-shops':      '在籍店舗数',
     'stat-trials':     '試作回数',
 
     /* 採用ページ */
+    'rec-nav-back':   '← トップページへ戻る',
     'rec-page-label': 'RECRUIT',
     'rec-page-title': '採用情報',
     'rec-page-sub':   'ラーメン鳳凰で、一緒に最高の一杯を作りませんか。',
@@ -256,12 +257,13 @@ const TRANSLATIONS = {
     'blog-follow':     'Follow Us',
     'profile-name':    'Seiichi Suzuki',
     'profile-role':    'MASTER / CHEF',
-    'profile-bio':     'Starting his training at 18, Seiichi honed his craft for 18 years at renowned shops in Tokyo, Osaka, and Fukuoka. He opened Ramen Houou in July 2026 with one mission: to make people happy, one bowl at a time.',
+    'profile-bio':     'Starting his training at 18, Seiichi honed his craft for 18 years at renowned shops in Tokyo, Osaka, and Fukuoka. He opened Ramen Houou in July 2026 with one mission: to make people happy, one bowl at a time. His specialties are pork bone shoyu and spicy miso ramen, and off the clock, he travels the country hunting for great bowls of ramen.',
     'stat-years':      'Years of Training',
     'stat-shops':      'Shops Trained At',
     'stat-trials':     'Recipe Trials',
 
     /* Recruit page */
+    'rec-nav-back':   '← Back to Top',
     'rec-page-label': 'RECRUIT',
     'rec-page-title': 'Careers',
     'rec-page-sub':   'Join us at Ramen Houou and help craft the perfect bowl.',

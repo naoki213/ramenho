@@ -170,11 +170,72 @@
     .footer-home:hover { color: var(--red-light); }
 
     .hidden { display: none !important; }
+
+    /* ハンバーガーメニュー（モバイル） */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 32px;
+      height: 32px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .nav-toggle span { display: block; width: 100%; height: 2px; background: var(--white); transition: transform 0.25s, opacity 0.25s; }
+    nav.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    nav.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+    nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-toggle { display: flex; }
+      .nav-right {
+        position: fixed;
+        top: 64px; left: 0; right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background: rgba(10,10,10,0.98);
+        border-bottom: 1px solid var(--red);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+      nav.nav-open .nav-right { max-height: 400px; }
+      .nav-links-sub { flex-direction: column; gap: 0; }
+      .nav-links-sub a { display: block; padding: 14px 24px; border-top: 1px solid #222; font-size: 0.9rem; }
+      .nav-back { border-left: none; border-top: 1px solid #222; padding: 14px 24px; }
+      .lang-toggle { margin: 12px 24px; }
+
+      .page-hero { padding: 40px 20px 0; }
+      .page-hero::before { display: none; }
+      .page-hero-title { font-size: clamp(1.8rem, 8vw, 2.6rem); }
+
+      .main-wrap { grid-template-columns: 1fr; padding: 32px 20px; gap: 36px; }
+
+      .featured-card img { height: 220px; }
+      .article-card { grid-template-columns: 120px 1fr; }
+      .article-thumb img { height: 100px; }
+
+      .modal-hero { height: 200px; }
+      .modal-body { padding: 24px 22px 36px; }
+      .modal-nav { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .nav-logo span { display: none; }
+      .article-card { grid-template-columns: 90px 1fr; }
+    }
   </style>
 </head>
 <body>
 
-<nav>
+<nav id="mainNav">
   <a class="nav-logo" href="index.html">
     <img src="logo-horizontal.png" alt="ラーメン鳳凰">
     <span>ラーメン鳳凰</span>
@@ -189,6 +250,9 @@
     <a class="nav-back" href="index.html" data-i18n="nav-top">← TOP</a>
     <button class="lang-toggle" onclick="toggleLang()" data-current="ja">EN</button>
   </div>
+  <button class="nav-toggle" aria-label="メニューを開く" onclick="document.getElementById('mainNav').classList.toggle('nav-open')">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <div class="page-hero">
@@ -210,23 +274,23 @@
   <aside class="sidebar">
     <!-- 店長プロフィール -->
     <div class="sidebar-block">
-      <div class="sidebar-block-head">店長プロフィール</div>
+      <div class="sidebar-block-head" data-i18n="blog-profile">店長プロフィール</div>
       <div class="sidebar-block-body">
         <div class="profile-img-wrap"><img src="ra/shop1.webp" alt="店長" class="profile-img"></div>
-        <div class="profile-name">鈴木 誠一</div>
-        <div class="profile-role">MASTER / CHEF</div>
-        <p class="profile-bio">18歳から修行を始め、東京・大阪・博多の名店で計18年間腕を磨く。「一杯のラーメンで人を幸せにしたい」という想いを胸に、2026年7月に独立。得意は豚骨醤油と辛味噌。趣味は全国のラーメン食べ歩き。</p>
+        <div class="profile-name" data-i18n="profile-name">鈴木 誠一</div>
+        <div class="profile-role" data-i18n="profile-role">MASTER / CHEF</div>
+        <p class="profile-bio" data-i18n="profile-bio">18歳から修行を始め、東京・大阪・博多の名店で計18年間腕を磨く。「一杯のラーメンで人を幸せにしたい」という想いを胸に、2026年7月に独立。得意は豚骨醤油と辛味噌。趣味は全国のラーメン食べ歩き。</p>
         <div class="profile-stats">
-          <div class="stat-item"><div class="stat-num">18</div><div class="stat-label">修行年数</div></div>
-          <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">在籍店舗数</div></div>
-          <div class="stat-item"><div class="stat-num">100+</div><div class="stat-label">試作回数</div></div>
+          <div class="stat-item"><div class="stat-num">18</div><div class="stat-label" data-i18n="stat-years">修行年数</div></div>
+          <div class="stat-item"><div class="stat-num">3</div><div class="stat-label" data-i18n="stat-shops">在籍店舗数</div></div>
+          <div class="stat-item"><div class="stat-num">100+</div><div class="stat-label" data-i18n="stat-trials">試作回数</div></div>
         </div>
       </div>
     </div>
 
     <!-- 人気記事 -->
     <div class="sidebar-block">
-      <div class="sidebar-block-head">人気の記事</div>
+      <div class="sidebar-block-head" data-i18n="blog-popular">人気の記事</div>
       <div class="sidebar-block-body" style="padding:12px 16px;">
         <div class="popular-list" id="popularList"></div>
       </div>
@@ -234,7 +298,7 @@
 
     <!-- カテゴリ -->
     <div class="sidebar-block">
-      <div class="sidebar-block-head">カテゴリ</div>
+      <div class="sidebar-block-head" data-i18n="blog-category">カテゴリ</div>
       <div class="sidebar-block-body" style="padding:12px 16px;">
         <div class="cat-list" id="catListWrap"></div>
       </div>
@@ -242,7 +306,7 @@
 
     <!-- アーカイブ -->
     <div class="sidebar-block">
-      <div class="sidebar-block-head">アーカイブ</div>
+      <div class="sidebar-block-head" data-i18n="blog-archive">アーカイブ</div>
       <div class="sidebar-block-body" style="padding:8px 16px;">
         <div class="archive-list" id="archiveListWrap"></div>
       </div>
@@ -250,7 +314,7 @@
 
     <!-- SNS -->
     <div class="sidebar-block">
-      <div class="sidebar-block-head">フォローする</div>
+      <div class="sidebar-block-head" data-i18n="blog-follow">フォローする</div>
       <div class="sidebar-block-body">
         <div class="sns-links">
           <a class="sns-btn" href="#">

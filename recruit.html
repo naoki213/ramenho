@@ -174,6 +174,27 @@
     .footer-copy { font-size: 0.7rem; color: #444; letter-spacing: 0.1em; }
     .footer-home { display: inline-block; margin-bottom: 16px; color: var(--gray); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.1em; }
     .footer-home:hover { color: var(--red-light); }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 700px) {
+      nav { padding: 0 16px; }
+      .nav-logo span { display: none; }
+      .nav-back { font-size: 0.72rem; }
+      .lang-toggle { margin-left: 10px; }
+
+      .page-hero { padding: 44px 20px; }
+      .page-hero h1 { font-size: clamp(1.7rem, 8vw, 2.4rem); }
+
+      .container { padding: 44px 20px; }
+
+      .reasons { grid-template-columns: 1fr; }
+
+      .job-card { padding: 24px 20px; }
+      .job-table th { width: 90px; font-size: 0.68rem; }
+
+      .apply-box { padding: 28px 20px; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -183,7 +204,7 @@
       <img src="logo-horizontal.png" alt="ラーメン鳳凰">
       <span>ラーメン鳳凰</span>
     </a>
-    <a class="nav-back" href="index.html" data-i18n="nav-top">← トップページへ戻る</a>
+    <a class="nav-back" href="index.html" data-i18n="rec-nav-back">← トップページへ戻る</a>
     <button class="lang-toggle" onclick="toggleLang()" data-current="ja">EN</button>
   </nav>
 
