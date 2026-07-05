@@ -185,6 +185,32 @@
     /* ページ切り替え */
     .page { display: none; }
     .page.active { display: block; }
+
+    /* レスポンシブ対応 */
+    .table-scroll { overflow-x: auto; }
+    @media (max-width: 900px) {
+      .login-box { width: 100%; max-width: 340px; padding: 36px 24px; }
+
+      .admin-header { padding: 0 16px; }
+      .admin-logo-text { display: none; }
+      .header-actions { gap: 10px; }
+      .header-link { display: none; }
+
+      .admin-body { grid-template-columns: 1fr; }
+      .admin-side {
+        border-right: none; border-bottom: 1px solid #222;
+        padding: 12px 0; display: flex; overflow-x: auto;
+      }
+      .side-section-label { display: none; }
+      .side-nav-item { white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; }
+      .side-nav-item.active { border-left-color: transparent; border-bottom-color: var(--red); }
+
+      .admin-main { padding: 20px 16px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-card { padding: 20px; }
+      .img-picker { grid-template-columns: repeat(3, 1fr); }
+    }
   </style>
 </head>
 <body>
@@ -269,10 +295,12 @@
             新規作成
           </button>
         </div>
-        <table class="article-table" id="recentTable">
-          <thead><tr><th></th><th>タイトル</th><th>カテゴリ</th><th>投稿日</th><th>閲覧数</th><th></th></tr></thead>
-          <tbody id="recentTbody"></tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="article-table" id="recentTable">
+            <thead><tr><th></th><th>タイトル</th><th>カテゴリ</th><th>投稿日</th><th>閲覧数</th><th></th></tr></thead>
+            <tbody id="recentTbody"></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 記事一覧 -->
@@ -288,10 +316,12 @@
             新規作成
           </button>
         </div>
-        <table class="article-table">
-          <thead><tr><th></th><th>タイトル</th><th>カテゴリ</th><th>投稿日</th><th>閲覧数</th><th>操作</th></tr></thead>
-          <tbody id="listTbody"></tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="article-table">
+            <thead><tr><th></th><th>タイトル</th><th>カテゴリ</th><th>投稿日</th><th>閲覧数</th><th>操作</th></tr></thead>
+            <tbody id="listTbody"></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 新規 / 編集フォーム -->
@@ -334,7 +364,7 @@
                 </span>
               </div>
               <p style="font-size:0.68rem; color:var(--gray2); margin-top:6px; line-height:1.7;">
-                &#x2605; 新しい写真を使う場合は、まず写真ファイルを <code style="background:#111;padding:1px 5px;color:var(--red-light);">ra1</code> フォルダにコピーしてから、ここにファイル名を入力してください。
+                &#x2605; 新しい写真を使う場合は、まず写真ファイルをサイトのフォルダ（<code style="background:#111;padding:1px 5px;color:var(--red-light);">index.html</code> と同じ階層、または <code style="background:#111;padding:1px 5px;color:var(--red-light);">ra</code> フォルダ）にコピーしてから、ここにファイル名を入力してください。
               </p>
             </div>
             <div class="form-group full">
@@ -685,11 +715,11 @@ function showExportGuide() {
       <div style="background:#111;border:1px solid #333;padding:20px 24px;text-align:left;margin-bottom:28px;">
         <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;">
           <span style="background:#c0392b;color:#fff;font-size:0.7rem;padding:2px 8px;white-space:nowrap;margin-top:2px;">STEP 1</span>
-          <span style="font-size:0.85rem;line-height:1.7;">ダウンロードされた <code style="background:#222;padding:1px 6px;color:#e74c3c;">posts.js</code> を<br><strong>ra1 フォルダに上書きコピー</strong>する</span>
+          <span style="font-size:0.85rem;line-height:1.7;">ダウンロードされた <code style="background:#222;padding:1px 6px;color:#e74c3c;">posts.js</code> を<br><strong>サイトのフォルダ（index.html と同じ階層）に上書きコピー</strong>する</span>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;">
           <span style="background:#c0392b;color:#fff;font-size:0.7rem;padding:2px 8px;white-space:nowrap;margin-top:2px;">STEP 2</span>
-          <span style="font-size:0.85rem;line-height:1.7;">Netlify など<strong>サーバーにフォルダをアップロード</strong>する<br><span style="color:#888;font-size:0.75rem;">（初回のみ。2回目以降は posts.js だけで OK）</span></span>
+          <span style="font-size:0.85rem;line-height:1.7;">GitHub に<strong>ファイルをアップロード（コミット）</strong>する<br><span style="color:#888;font-size:0.75rem;">（GitHub Pages が自動で反映します）</span></span>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;">
           <span style="background:#27ae60;color:#fff;font-size:0.7rem;padding:2px 8px;white-space:nowrap;margin-top:2px;">完了</span>
